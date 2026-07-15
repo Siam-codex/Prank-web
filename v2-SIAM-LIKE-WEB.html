@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Future Dimensional</title>
+    
+    <!-- All CSS is here -->
+    <style>
+        /* Importing modern and stylish fonts */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Creepster&display=swap');
+
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background-color: #000; /* পিউর ব্ল্যাক ব্যাকগ্রাউন্ড */
+            color: white;
+            overflow: hidden;
+            position: relative;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        /* ম্যাট্রিক্স ক্যানভাস স্টাইল */
+        #matrix-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        /* Styling the calm screen container */
+        #calm-screen {
+            z-index: 10;
+            padding: 40px;
+            border-radius: 15px;
+            background: rgba(15, 15, 20, 0.85); /* গ্লাস ইফেক্ট আরও ডার্ক করা হলো */
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1); /* সাদাটে গ্লাস বর্ডার */
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+            animation: fade-in 1.5s ease-out;
+        }
+
+        @keyframes fade-in {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        #calm-screen .icon {
+            font-size: 4em;
+            margin-bottom: 10px;
+            animation: pulse-glow 2s infinite;
+        }
+
+        #calm-screen h1 {
+            font-size: 2.5em;
+            font-weight: 600;
+            margin: 0 0 10px 0;
+            color: #ffffff;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+        }
+
+        #calm-screen p {
+            font-size: 1.1em;
+            font-weight: 300;
+            margin: 0 0 25px 0;
+            color: #e0e0e0;
+        }
+
+        #enterButton {
+            padding: 15px 40px;
+            font-size: 1.2em;
+            font-weight: 600;
+            cursor: pointer;
+            background: linear-gradient(45deg, #2c3e50, #000000); /* বাটন ডার্ক করা হলো */
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px 0 rgba(255, 255, 255, 0.1);
+            animation: pulse-glow 2s infinite;
+        }
+
+        #enterButton:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px 0 rgba(255, 255, 255, 0.3);
+            background: linear-gradient(45deg, #000000, #2c3e50);
+        }
+
+        @keyframes pulse-glow {
+            0% { box-shadow: 0 0 10px rgba(255, 255, 255, 0.1); }
+            50% { box-shadow: 0 0 20px rgba(255, 255, 255, 0.3); }
+            100% { box-shadow: 0 0 10px rgba(255, 255, 255, 0.1); }
+        }
+
+        /* --- CHAOS SCREEN STYLES --- */
+        #chaos-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 5;
+        }
+
+        #chaosText {
+            font-family: 'Creepster', cursive;
+            font-size: 5em;
+            color: #ff4757;
+            text-shadow: 3px 3px #000;
+            animation: shake 0.5s infinite;
+        }
+
+        /* --- FAKE CHROME WINDOWS STYLES --- */
+        #fake-windows-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 6;
+        }
+
+        .fake-chrome-window {
+            position: absolute;
+            width: 500px;
+            height: 350px;
+            background-color: #f0f0f0;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            pointer-events: auto;
+            display: flex;
+            flex-direction: column;
+            animation: bounce-in 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .fake-chrome-header {
+            background-color: #e8e8e8;
+            padding: 8px;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #d3d3d3;
+        }
+
+        .fake-chrome-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .fake-chrome-control-btn {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+        }
+        .fake-chrome-control-btn.close { background-color: #ff5f57; }
+        .fake-chrome-control-btn.minimize { background-color: #ffbd2e; }
+        .fake-chrome-control-btn.maximize { background-color: #28ca42; }
+
+        .fake-chrome-address-bar {
+            flex-grow: 1;
+            margin: 0 10px;
+            padding: 5px 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: white;
+            font-size: 12px;
+            color: #555;
+        }
+
+        .fake-chrome-content {
+            flex-grow: 1;
+            padding: 15px;
+            font-size: 14px;
+            color: #333;
+            background-color: white;
+            border-bottom-left-radius: 8px;
+            border-bottom-right-radius: 8px;
+            overflow: auto;
+        }
+        
+        .fake-alert {
+            padding: 10px;
+            border: 1px solid #f5c6cb;
+            background-color: #f8d7da;
+            color: #721c24;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        /* --- ANIMATIONS --- */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px) rotate(-5deg); }
+            75% { transform: translateX(10px) rotate(5deg); }
+        }
+
+        @keyframes bounce-in {
+            0% { transform: scale(0); opacity: 0; }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ক্যানভাস এলিমেন্ট -->
+    <canvas id="matrix-canvas"></canvas>
+
+    <!-- The initial, calm screen -->
+    <div id="calm-screen">
+        <div class="icon">🇧🇷</div>
+        <h1>Welcome to SIAM LIKE WEB</h1>
+        <p>Experience a new LIKE BOT the web.</p>
+        <button id="enterButton">Launch BOT</button>
+    </div>
+
+    <!-- The chaotic screen, initially hidden -->
+    <div id="chaos-screen" style="display: none;">
+        <h1 id="chaosText">FUCKED!</h1>
+    </div>
+
+    <!-- Container for our fake chrome windows -->
+    <div id="fake-windows-container"></div>
+
+    <!-- Audio element for the background sound -->
+    <audio id="backgroundSound" loop>
+        <source src="https://files.catbox.moe/1fxqdw.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <!-- All JavaScript is here -->
+    <script>
+        // --- HIGH QUALITY BLACK/GRAY MATRIX RAIN SCRIPT ---
+        const canvas = document.getElementById('matrix-canvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        const katakana = "ｦｱｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ1023456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        const alphabet = katakana.split("");
+
+        const fontSize = 14; 
+        const columns = canvas.width / fontSize;
+        const rainDrops = [];
+
+        for (let x = 0; x < columns; x++) {
+            rainDrops[x] = Math.random() * -100; 
+        }
+
+        // ম্যাট্রিক্স ড্রপের কালার গ্রিন থেকে বদলে ডার্ক চারকোল গ্রে (#222226) এবং সাদাটে গ্রে করা হলো
+        let matrixColor = '#222226'; 
+        let matrixGlow = 0; // গ্রিন ভাইব দূর করতে গ্লো ০ করা হলো
+
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.06)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.font = 'bold ' + fontSize + 'px monospace';
+            ctx.shadowBlur = matrixGlow;
+
+            for (let i = 0; i < rainDrops.length; i++) {
+                const text = alphabet[Math.floor(Math.random() * alphabet.length)];
+                
+                ctx.fillStyle = matrixColor;
+                ctx.shadowColor = matrixColor;
+                
+                // র্যান্ডমলি কিছু ড্রপ হালকা সাদাটে-ধূসর কালার হবে যাতে স্ক্রিন একদম খালি না লাগে
+                if(Math.random() > 0.98) {
+                    ctx.fillStyle = "#44444a";
+                }
+
+                ctx.fillText(text, i * fontSize, rainDrops[i] * fontSize);
+
+                if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    rainDrops[i] = 0;
+                }
+                rainDrops[i] += 0.85; 
+            }
+        }
+        setInterval(drawMatrix, 33);
+
+
+        // --- ORIGINAL FUNCTIONALITIES ---
+        const enterButton = document.getElementById('enterButton');
+        const calmScreen = document.getElementById('calm-screen');
+        const chaosScreen = document.getElementById('chaos-screen');
+        const backgroundSound = document.getElementById('backgroundSound');
+        const fakeWindowsContainer = document.getElementById('fake-windows-container');
+        const body = document.body;
+
+        let chaosInterval;
+
+        function startChaos() {
+            console.log("SUPER PRANK UNLEASHED!");
+
+            calmScreen.style.display = 'none';
+            chaosScreen.style.display = 'flex';
+
+            // ক্লিক করার সাথে সাথে ম্যাট্রিক্সের ডার্ক কালার ডেঞ্জারাস রেড গ্লো হয়ে যাবে!
+            matrixColor = '#ff4757';
+            matrixGlow = 15;
+
+            backgroundSound.play().catch(error => {
+                console.log("Sound was blocked by the browser.");
+            });
+
+            chaosInterval = setInterval(() => {
+                const randomColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                body.style.backgroundColor = randomColor;
+            }, 200);
+
+            // Open 3 fake chrome windows at once
+            for (let i = 0; i < 3000; i++) {
+                setTimeout(() => {
+                    createFakeChromeWindow();
+                }, i * 200); 
+            }
+        }
+
+        function createFakeChromeWindow() {
+            const windowEl = document.createElement('div');
+            windowEl.classList.add('fake-chrome-window');
+            
+            // Random position
+            const topOffset = Math.random() * (window.innerHeight - 350);
+            const leftOffset = Math.random() * (window.innerWidth - 500);
+            windowEl.style.top = topOffset + 'px';
+            windowEl.style.left = leftOffset + 'px';
+
+            windowEl.innerHTML = `
+                <div class="fake-chrome-header">
+                    <div class="fake-chrome-controls">
+                        <div class="fake-chrome-control-btn close"></div>
+                        <div class="fake-chrome-control-btn minimize"></div>
+                        <div class="fake-chrome-control-btn maximize"></div>
+                    </div>
+                    <input type="text" class="fake-chrome-address-bar" value="https://google.com" readonly>
+                </div>
+                <div class="fake-chrome-content">
+                    <div class="fake-alert">
+                        <strong>Security Alert!</strong><br>
+                        Your system has been compromised. Please do not close this window.
+                    </div>
+                    <p>Deleting system files...</p>
+                </div>
+            `;
+
+            fakeWindowsContainer.appendChild(windowEl);
+
+            // Make the window draggable
+            let isDragging = false;
+            let currentX;
+            let currentY;
+            let initialX;
+            let initialY;
+            let xOffset = 0;
+            let yOffset = 0;
+
+            const dragStart = (e) => {
+                if (e.target.closest('.fake-chrome-controls')) return;
+                initialX = e.clientX - xOffset;
+                initialY = e.clientY - yOffset;
+                if (e.target === windowEl || e.target.closest('.fake-chrome-header')) {
+                    isDragging = true;
+                }
+            };
+
+            const dragEnd = () => {
+                initialX = currentX;
+                initialY = currentY;
+                isDragging = false;
+            };
+
+            const drag = (e) => {
+                if (isDragging) {
+                    e.preventDefault();
+                    currentX = e.clientX - initialX;
+                    currentY = e.clientY - initialY;
+                    xOffset = currentX;
+                    yOffset = currentY;
+                    windowEl.style.transform = `translate(${currentX}px, ${currentY}px)`;
+                }
+            };
+            
+            windowEl.addEventListener('mousedown', dragStart);
+            document.addEventListener('mouseup', dragEnd);
+            document.addEventListener('mousemove', drag);
+
+            // Add chaos to the close button
+            const closeBtn = windowEl.querySelector('.fake-chrome-control-btn.close');
+            closeBtn.addEventListener('click', () => {
+                windowEl.style.animation = 'shake 0.2s infinite';
+                const content = windowEl.querySelector('.fake-chrome-content');
+                content.innerHTML = `<div class="fake-alert"><strong>Error!</strong><br>You cannot escape!</div>`;
+            });
+        }
+
+        enterButton.addEventListener('click', startChaos);
+    </script>
+
+</body>
+</html>
